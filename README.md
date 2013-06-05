@@ -7,6 +7,8 @@ A couch persistence adapter for [Polyclay](https://github.com/ceejbot/polyclay).
 
 ## How-to
 
+See the polyclay docs for information about how to use the models.
+
 Once you've built a polyclay model, you can mix persistence methods into it:
 
 ````javascript
