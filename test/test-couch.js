@@ -1,19 +1,13 @@
 /*global describe:true, it:true, before:true, after:true */
 
 var
-	chai = require('chai'),
-	assert = chai.assert,
-	expect = chai.expect,
-	should = chai.should()
-	;
-
-var
-	cradle       = require('cradle'),
-	fs           = require('fs'),
-	path         = require('path'),
-	polyclay     = require('polyclay'),
-	util         = require('util'),
-	CouchAdapter = require('../index')
+    demand       = require('must'),
+    cradle       = require('cradle'),
+    fs           = require('fs'),
+    path         = require('path'),
+    polyclay     = require('polyclay'),
+    util         = require('util'),
+    CouchAdapter = require('../index')
 	;
 
 var testDir = process.cwd();
@@ -69,7 +63,7 @@ describe('couch adapter', function()
 	{
 		couch_config.auth =
 		{
-			username: process.env.USER,
+			username: process.env.CUSER,
 			password: process.env.CPASS
 		};
 	}
@@ -118,12 +112,12 @@ describe('couch adapter', function()
 		};
 
 		Model.setStorage(options, CouchAdapter);
-		Model.adapter.should.be.ok;
-		Model.adapter.db.should.be.ok;
+		Model.adapter.must.exist();
+		Model.adapter.db.must.exist();
 		Model.adapter.connection.info(function(err, response)
 		{
-			should.not.exist(err);
-			response.should.be.an('object');
+			demand(err).not.exist();
+			response.must.be.an.object();
 			done();
 		});
 	});
@@ -132,12 +126,12 @@ describe('couch adapter', function()
 	{
 		Model.adapter.db.exists(function (err, exists)
 		{
-			should.not.exist(err);
+			demand(err).not.exist();
 			if (exists)
 				return done();
 			Model.provision(function(err, res)
 			{
-				should.not.exist(err);
+				demand(err).not.exist();
 				done();
 			});
 		});
@@ -147,9 +141,9 @@ describe('couch adapter', function()
 	{
 		Model.adapter.db.get('_design/models', function(err, response)
 		{
-			should.not.exist(err);
-			response.should.have.property('views');
-			response.views.should.have.property('by_name');
+			demand(err).not.exist();
+			response.must.have.property('views');
+			response.views.must.have.property('by_name');
 			done();
 		});
 	});
@@ -170,12 +164,12 @@ describe('couch adapter', function()
 		});
 		instance.save(function(err, id_and_rev)
 		{
-			should.not.exist(err);
-			id_and_rev.should.be.ok;
-			id_and_rev.should.be.an('object');
-			instance.isDirty().should.be.false;
-			instance._id.should.equal(id_and_rev.id);
-			instance._rev.should.equal(id_and_rev.rev);
+			demand(err).not.exist();
+			id_and_rev.must.exist();
+			id_and_rev.must.be.an.object();
+			instance.isDirty().must.be.false();
+			instance._id.must.equal(id_and_rev.id);
+			instance._rev.must.equal(id_and_rev.rev);
 			done();
 		});
 	});
@@ -184,15 +178,15 @@ describe('couch adapter', function()
 	{
 		Model.get(instance._id, function(err, retrieved)
 		{
-			should.not.exist(err);
-			retrieved.should.be.ok;
-			retrieved.should.be.an('object');
-			retrieved._id.should.equal(instance._id);
-			retrieved.name.should.equal(instance.name);
-			retrieved.created.getTime().should.equal(instance.created.getTime());
-			retrieved.is_valid.should.equal(instance.is_valid);
-			retrieved.count.should.equal(instance.count);
-			retrieved.computed.should.equal(instance.computed);
+			demand(err).not.exist();
+			retrieved.must.exist();
+			retrieved.must.be.an.object();
+			retrieved._id.must.equal(instance._id);
+			retrieved.name.must.equal(instance.name);
+			retrieved.created.getTime().must.equal(instance.created.getTime());
+			retrieved.is_valid.must.equal(instance.is_valid);
+			retrieved.count.must.equal(instance.count);
+			retrieved.computed.must.equal(instance.computed);
 			done();
 		});
 	});
@@ -201,14 +195,14 @@ describe('couch adapter', function()
 	{
 		var prevRev = instance._rev;
 		instance.name = "New name";
-		instance.isDirty().should.be.true;
+		instance.isDirty().must.be.true();
 		instance.save(function(err, response)
 		{
-			should.not.exist(err);
-			response.should.be.a('string');
-			response.should.equal('OK');
-			instance.isDirty().should.be.false;
-			instance._rev.should.not.equal(prevRev);
+			demand(err).not.exist();
+			response.must.be.a.string();
+			response.must.equal('OK');
+			instance.isDirty().must.be.false();
+			instance._rev.must.not.equal(prevRev);
 			done();
 		});
 	});
@@ -225,9 +219,9 @@ describe('couch adapter', function()
 
 			Model.get(ids, function(err, itemlist)
 			{
-				should.not.exist(err);
-				itemlist.should.be.an('array');
-				itemlist.length.should.equal(2);
+				demand(err).not.exist();
+				itemlist.must.be.an.array();
+				itemlist.length.must.equal(2);
 				done();
 			});
 		});
@@ -237,9 +231,9 @@ describe('couch adapter', function()
 	{
 		Model.all(function(err, itemlist)
 		{
-			should.not.exist(err);
-			itemlist.should.be.an('array');
-			itemlist.length.should.be.above(1);
+			demand(err).not.exist();
+			itemlist.must.be.an.array();
+			itemlist.length.must.be.above(1);
 			done();
 		});
 	});
@@ -248,9 +242,9 @@ describe('couch adapter', function()
 	{
 		Model.fetchByName('two', function(err, itemlist)
 		{
-			should.not.exist(err);
-			itemlist.should.be.an('array');
-			itemlist.length.should.equal(1);
+			demand(err).not.exist();
+			itemlist.must.be.an.array();
+			itemlist.length.must.equal(1);
 			done();
 		});
 	});
@@ -259,9 +253,9 @@ describe('couch adapter', function()
 	{
 		Model.constructMany([], function(err, results)
 		{
-			should.not.exist(err);
-			results.should.be.an('array');
-			results.length.should.equal(0);
+			demand(err).not.exist();
+			results.must.be.an.array();
+			results.length.must.equal(0);
 			done();
 		});
 	});
@@ -270,18 +264,18 @@ describe('couch adapter', function()
 	{
 		Model.fetchByName('two', function(err, itemlist)
 		{
-			should.not.exist(err);
+			demand(err).not.exist();
 			var item = itemlist[0];
 
 			item.merge({ is_valid: true, count: 1023 }, function(err, response)
 			{
-				should.not.exist(err);
+				demand(err).not.exist();
 				Model.get(item._id, function(err, stored)
 				{
-					should.not.exist(err);
-					stored.count.should.equal(1023);
-					stored.is_valid.should.equal(true);
-					stored.name.should.equal(item.name);
+					demand(err).not.exist();
+					stored.count.must.equal(1023);
+					stored.is_valid.must.equal(true);
+					stored.name.must.equal(item.name);
 					done();
 				});
 			});
@@ -293,11 +287,11 @@ describe('couch adapter', function()
 		Model.defineAttachment('frogs', 'text/plain');
 		Model.defineAttachment('avatar', 'image/png');
 
-		instance.set_frogs.should.be.a('function');
-		instance.fetch_frogs.should.be.a('function');
+		instance.set_frogs.must.be.a.function();
+		instance.fetch_frogs.must.be.a.function();
 		var property = Object.getOwnPropertyDescriptor(Model.prototype, 'frogs');
-		property.get.should.be.a('function');
-		property.set.should.be.a('function');
+		property.get.must.be.a.function();
+		property.set.must.be.a.function();
 	});
 
 	it('can save attachments', function(done)
@@ -307,9 +301,9 @@ describe('couch adapter', function()
 		var prevRev = instance._rev;
 		instance.save(function(err, response)
 		{
-			should.not.exist(err);
-			instance.isDirty().should.equal.false;
-			instance._rev.should.not.equal(prevRev);
+			demand(err).not.exist();
+			instance.isDirty().must.equal.false;
+			instance._rev.must.not.equal(prevRev);
 			done();
 		});
 	});
@@ -320,14 +314,14 @@ describe('couch adapter', function()
 		{
 			retrieved.fetch_frogs(function(err, frogs)
 			{
-				should.not.exist(err);
-				frogs.should.be.a('string');
-				frogs.should.equal('This is bunch of frogs.');
+				demand(err).not.exist();
+				frogs.must.be.a.string();
+				frogs.must.equal('This is bunch of frogs.');
 				retrieved.fetch_avatar(function(err, imagedata)
 				{
-					should.not.exist(err);
-					assert(imagedata instanceof Buffer, 'expected image attachment to be a Buffer');
-					imagedata.length.should.equal(attachmentdata.length);
+					demand(err).not.exist();
+					imagedata.must.be.instanceof(Buffer);
+					imagedata.length.must.equal(attachmentdata.length);
 					done();
 				});
 			});
@@ -339,19 +333,19 @@ describe('couch adapter', function()
 		instance.frogs = 'Poison frogs are awesome.';
 		instance.save(function(err, response)
 		{
-			should.not.exist(err);
+			demand(err).not.exist();
 			Model.get(instance._id, function(err, retrieved)
 			{
-				should.not.exist(err);
-				retrieved._rev.should.equal(instance._rev);
+				demand(err).not.exist();
+				retrieved._rev.must.equal(instance._rev);
 				retrieved.fetch_frogs(function(err, frogs)
 				{
-					should.not.exist(err);
-					frogs.should.equal(instance.frogs);
+					demand(err).not.exist();
+					frogs.must.equal(instance.frogs);
 					retrieved.fetch_avatar(function(err, imagedata)
 					{
-						should.not.exist(err);
-						imagedata.length.should.equal(attachmentdata.length);
+						demand(err).not.exist();
+						imagedata.length.must.equal(attachmentdata.length);
 						done();
 					});
 				});
@@ -364,15 +358,15 @@ describe('couch adapter', function()
 		instance.frogs = 'Poison frogs are awesome, but I think sand frogs are adorable.';
 		instance.saveAttachment('frogs', function(err, response)
 		{
-			should.not.exist(err);
+			demand(err).not.exist();
 			Model.get(instance._id, function(err, retrieved)
 			{
-				should.not.exist(err);
-				retrieved._rev.should.equal(instance._rev);
+				demand(err).not.exist();
+				retrieved._rev.must.equal(instance._rev);
 				retrieved.fetch_frogs(function(err, frogs)
 				{
-					should.not.exist(err);
-					frogs.should.equal(instance.frogs);
+					demand(err).not.exist();
+					frogs.must.equal(instance.frogs);
 					done();
 				});
 			});
@@ -383,12 +377,12 @@ describe('couch adapter', function()
 	{
 		instance.frogs = 'This is bunch of frogs.';
 		var prevRev = instance._rev;
-		instance.isDirty().should.equal(true);
+		instance.isDirty().must.equal(true);
 		instance.saveAttachment('frogs', function(err, response)
 		{
-			should.not.exist(err);
-			instance._rev.should.not.equal(prevRev);
-			instance.isDirty().should.equal(false);
+			demand(err).not.exist();
+			instance._rev.must.not.equal(prevRev);
+			instance.isDirty().must.equal(false);
 			done();
 		});
 	});
@@ -398,9 +392,9 @@ describe('couch adapter', function()
 		var prevRev = instance._rev;
 		instance.removeAttachment('frogs', function(err, deleted)
 		{
-			should.not.exist(err);
-			deleted.should.be.true;
-			instance._rev.should.not.equal(prevRev);
+			demand(err).not.exist();
+			deleted.must.be.true();
+			instance._rev.must.not.equal(prevRev);
 			done();
 		});
 	});
@@ -411,15 +405,15 @@ describe('couch adapter', function()
 		instance.avatar = attachmentdata;
 		instance.save(function(err, response)
 		{
-			should.not.exist(err);
-			instance.isDirty().should.be.false;
+			demand(err).not.exist();
+			instance.isDirty().must.be.false();
 			instance.fetch_avatar(function(err, imagedata)
 			{
-				should.not.exist(err);
+				demand(err).not.exist();
 				var cached = instance.__attachments['avatar'].body;
-				cached.should.be.okay;
-				(cached instanceof Buffer).should.equal(true);
-				polyclay.dataLength(cached).should.equal(polyclay.dataLength(attachmentdata));
+				cached.must.exist();
+				(cached instanceof Buffer).must.equal(true);
+				polyclay.dataLength(cached).must.equal(polyclay.dataLength(attachmentdata));
 				done();
 			});
 		});
@@ -430,14 +424,14 @@ describe('couch adapter', function()
 		instance.avatar = null;
 		instance.save(function(err, response)
 		{
-			should.not.exist(err);
+			demand(err).not.exist();
 			Model.get(instance._id, function(err, retrieved)
 			{
-				should.not.exist(err);
+				demand(err).not.exist();
 				retrieved.fetch_avatar(function(err, imagedata)
 				{
-					should.not.exist(err);
-					should.not.exist(imagedata);
+					demand(err).not.exist();
+					demand(imagedata).not.exist();
 					done();
 				});
 			});
@@ -449,31 +443,31 @@ describe('couch adapter', function()
 		hookTest = new Model();
 		hookTest.name = 'hook test';
 
-		hookTest.should.not.have.property('afterSaveCalled');
-		hookTest.should.not.have.property('beforeSaveCalled');
+		hookTest.must.not.have.property('afterSaveCalled');
+		hookTest.must.not.have.property('beforeSaveCalled');
 		hookTest.save(function(err, res)
 		{
-			should.not.exist(err);
+			demand(err).not.exist();
 			hookid = hookTest._id;
-			hookTest.should.have.property('beforeSaveCalled');
-			hookTest.beforeSaveCalled.should.equal(true);
+			hookTest.must.have.property('beforeSaveCalled');
+			hookTest.beforeSaveCalled.must.equal(true);
 			done();
 		});
 	});
 
 	it('emits "after-save" after saving a model', function()
 	{
-		hookTest.should.have.property('afterSaveCalled');
-		hookTest.afterSaveCalled.should.equal(true);
+		hookTest.must.have.property('afterSaveCalled');
+		hookTest.afterSaveCalled.must.equal(true);
 	});
 
 	it('can remove a document from the db', function(done)
 	{
 		instance.destroy(function(err, deleted)
 		{
-			should.not.exist(err);
-			deleted.should.be.ok;
-			instance.destroyed.should.be.true;
+			demand(err).not.exist();
+			deleted.must.exist();
+			instance.destroyed.must.be.true();
 			done();
 		});
 	});
@@ -486,12 +480,12 @@ describe('couch adapter', function()
 		{
 			Model.fetchByName('two', function(err, itemlist)
 			{
-				should.not.exist(err);
-				itemlist.should.be.an('array');
-				itemlist.length.should.be.above(1);
+				demand(err).not.exist();
+				itemlist.must.be.an.array();
+				itemlist.length.must.be.above(1);
 				Model.destroyMany(itemlist, function(err, response)
 				{
-					should.not.exist(err);
+					demand(err).not.exist();
 					// TODO examine response more carefully
 					done();
 				});
@@ -513,4 +507,3 @@ describe('couch adapter', function()
 	});
 
 });
-

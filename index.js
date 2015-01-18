@@ -1,10 +1,10 @@
 var
-	async = require('async'),
-	cradle = require('cradle'),
-	path = require('path')
+    async  = require('async'),
+    cradle = require('cradle'),
+    path   = require('path')
 	;
 
-function CouchAdapter() { }
+var CouchAdapter = module.exports = function CouchAdapter() { };
 
 CouchAdapter.prototype.configure = function(options, modelfunc)
 {
@@ -12,8 +12,6 @@ CouchAdapter.prototype.configure = function(options, modelfunc)
 	this.dbname      = options.dbname || modelfunc.prototype.plural;
 	this.db          = this.connection.database(this.dbname);
 	this.constructor = modelfunc;
-
-	// add some methods to the model prototype
 
 	modelfunc.prototype._idRevStruct = function()
 	{
@@ -188,5 +186,3 @@ CouchAdapter.prototype.inflate = function(struct)
 
 	return object;
 };
-
-module.exports = CouchAdapter;

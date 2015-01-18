@@ -1,58 +1,54 @@
 {
-	"name":           "polyclay-couch",
-	"version":        "0.0.1",
-	"description":    "couch persistence adapter for polyclay, the schema-enforcing document mapper",
-	"author":         "C J Silverio <ceejceej@gmail.com>",
-	"license":        "MIT",
-	"readmeFilename": "README.md",
-	"main":           "index.js",
-	"directories":
-	{
-		"example": "examples",
-		"test":    "test"
-	},
-	"scripts":
-	{
-		"test":       "mocha -R spec -t 5000 test/test-*.js && mocha -t 5000 --require blanket -R travis-cov test/test-*.js",
-		"test-cov":   "mocha --require blanket -R travis-cov test/test-*.js",
-		"coverage":   "mocha --require blanket -R html-cov test/test-*.js > test/coverage.html",
-		"travis-cov": { "threshold": 90 },
-		"blanket":
-		{
-			"pattern": "//^((?!\/node_modules|test|examples\/).)*$/ig"
-		}
-	},
-	"repository":
-	{
-		"type": "git",
-		"url":  "git://github.com/ceejbot/polyclay-couch.git"
-	},
-	"peerDependencies":
-	{
-		"polyclay": "*"
-	},
-	"dependencies":
-	{
-		"async":     "*",
-		"lodash":    "*",
-		"lucidjs":   "*",
-		"cradle":      "git://github.com/ceejbot/cradle.git"
-	},
-	"devDependencies":
-	{
-		"mocha":      "*",
-		"chai":       "*",
-		"blanket":    "*",
-		"travis-cov": "*"
-	},
-	"keywords":
-	[
-		"odm",
-		"model",
-		"mapper",
-		"schema",
-		"couchdb",
-		"couch",
-		"polyclay"
-	]
+  "name": "polyclay-couch",
+  "description": "couch persistence adapter for polyclay, the schema-enforcing document mapper",
+  "version": "0.0.1",
+  "author": "C J Silverio <ceejceej@gmail.com>",
+  "config": {
+    "travis-cov": {
+      "threshold": 90
+    },
+    "blanket": {
+      "pattern": "index.js",
+      "data-cover-never": [
+        "node_modules",
+        "test"
+      ],
+      "output-reporter": "spec"
+    }
+  },
+  "dependencies": {
+    "async": "~0.9.0",
+    "cradle": "~0.6.9",
+    "lodash": "~2.4.1"
+  },
+  "devDependencies": {
+    "blanket": "*",
+    "mocha": "~2.1.0",
+    "mocoverage": "~1.0.0",
+    "must": "~0.12.0",
+    "polyclay": "~1.6.6",
+    "travis-cov": "~0.2.5"
+  },
+  "keywords": [
+    "odm",
+    "model",
+    "mapper",
+    "schema",
+    "couchdb",
+    "couch",
+    "polyclay"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ceejbot/polyclay-couch.git"
+  },
+  "bugs": "https://github.com/ceejbot/polyclay-couch/issues",
+  "homepage": "https://github.com/ceejbot/polyclay-couch",
+  "scripts": {
+    "test": "mocha --check-leaks --ui exports --require blanket -R mocoverage",
+    "test-cov": "mocha --require blanket -R travis-cov test/test-*.js"
+  }
 }
