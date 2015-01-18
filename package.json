@@ -26,7 +26,7 @@
     "mocha": "~2.1.0",
     "mocoverage": "~1.0.0",
     "must": "~0.12.0",
-    "polyclay": "~1.6.6",
+    "polyclay": "~1.7.0",
     "travis-cov": "~0.2.5"
   },
   "keywords": [
