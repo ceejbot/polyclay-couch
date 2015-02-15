@@ -149,7 +149,7 @@ CouchAdapter.prototype.attachment = function(key, name, callback)
 	this.db.getAttachment(key, name, function(err, response)
 	{
 		if (err) return callback(err);
-		if (response && response.body)
+		if (response && response.body && response.body.length > 0)
 			return callback(null, response.body);
 		callback(null, null);
 	});
